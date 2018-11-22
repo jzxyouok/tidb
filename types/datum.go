@@ -1162,10 +1162,9 @@ func ProduceDecWithSpecifiedTp(dec *MyDecimal, tp *FieldType, sc *stmtctx.Statem
 
 func (d *Datum) convertToMysqlYear(sc *stmtctx.StatementContext, target *FieldType) (Datum, error) {
 	var (
-		ret     Datum
-		y       int64
-		err     error
-		fromStr bool
+		ret Datum
+		y   int64
+		err error
 	)
 	switch d.k {
 	case KindString, KindBytes:
@@ -1173,7 +1172,6 @@ func (d *Datum) convertToMysqlYear(sc *stmtctx.StatementContext, target *FieldTy
 		if err != nil {
 			return ret, errors.Trace(err)
 		}
-		fromStr = true
 	case KindMysqlTime:
 		y = int64(d.GetMysqlTime().Time.Year())
 	case KindMysqlDuration:
@@ -1185,7 +1183,7 @@ func (d *Datum) convertToMysqlYear(sc *stmtctx.StatementContext, target *FieldTy
 		}
 		y = ret.GetInt64()
 	}
-	y, err = AdjustYear(y, fromStr)
+	y, err = AdjustYear(y)
 	if err != nil {
 		return invalidConv(d, target.Tp)
 	}
